@@ -12,7 +12,7 @@
 #include "backlight/backlight.h"
 
 #define WPM_CHART_WIDTH 135
-#define WPM_CHART_HEIGHT 70
+#define WPM_CHART_HEIGHT 35
 
 #define LCD_HEIGHT 240
 #define LCD_WIDTH 135
@@ -112,39 +112,41 @@ void draw_layers(void) {
     drawtext_layer(34, 45, 32, "2", 1);
     drawtext_layer(66, 45, 32, "3", 2);
     drawtext_layer(98, 45, 32, "4", 3);
+    drawtext_layer(34, 80, 32, "5", 4);
+    drawtext_layer(66, 80, 32, "6", 5);
 }
 
-void draw_os(bool init) {
-    if (init) {
-        drawtext_centered(surface, 0, 190, 135, pixellari_24, "OS");
-    }
-    char *os_name;
-    switch (detected_host_os()) {
-        case OS_MACOS:
-            os_name = "MacOS";
-            break;
-        case OS_IOS:
-            os_name = "Apple";
-            break;
-        case OS_WINDOWS:
-            os_name = "Windows";
-            break;
-        case OS_LINUX:
-            os_name = "Linux";
-            break;
-        default:
-            os_name = "Unsure";
-            break;
-    }
-    qp_rect(surface, 0, 220, LCD_WIDTH-1, 220+pixellari_18->line_height, 0, 0, 0, true);
-    drawtext_centered_recolor(surface, 0, 220, 135, pixellari_18, os_name, ui_hsv.h, ui_hsv.s, ui_hsv.v, 0, 0, 0);
-}
+// void draw_os(bool init) {
+//     if (init) {
+//         drawtext_centered(surface, 0, 190, 135, pixellari_24, "OS");
+//     }
+//     char *os_name;
+//     switch (detected_host_os()) {
+//         case OS_MACOS:
+//             os_name = "MacOS";
+//             break;
+//         case OS_IOS:
+//             os_name = "Apple";
+//             break;
+//         case OS_WINDOWS:
+//             os_name = "Windows";
+//             break;
+//         case OS_LINUX:
+//             os_name = "Linux";
+//             break;
+//         default:
+//             os_name = "Unsure";
+//             break;
+//     }
+//     qp_rect(surface, 0, 220, LCD_WIDTH-1, 220+pixellari_18->line_height, 0, 0, 0, true);
+//     drawtext_centered_recolor(surface, 0, 220, 135, pixellari_18, os_name, ui_hsv.h, ui_hsv.s, ui_hsv.v, 0, 0, 0);
+// }
 
 void draw_wpm_text(void) {
     char buffer[64] = {0};
     snprintf(buffer, sizeof(buffer), "WPM:%d", get_current_wpm());
-    qp_rect(surface, 0, 80, LCD_WIDTH - 1, 80 + pixellari_24->line_height, 0, 0, 0, true);
-    drawtext_centered(surface, 0, 80, 135, pixellari_24, buffer);
+    qp_rect(surface, 0, 115, LCD_WIDTH - 1, 115 + pixellari_24->line_height, 0, 0, 0, true);
+    drawtext_centered(surface, 0, 115, 135, pixellari_24, buffer);
 }
 
 struct {
@@ -299,7 +301,7 @@ __attribute__((weak)) bool display_init_user(void) {
 void display_ui_init(void) {
     if (is_keyboard_left()) {
         wpm_layer_display_init();
-        draw_os(true);
+        // draw_os(true);
     } else {
         rgb_bl_display_init();
     }
@@ -393,13 +395,13 @@ void display_task_kb(void) {
             lastlay = currlay;
             draw_layers();
         }
-
-        static os_variant_t last_os = OS_UNSURE;
-
-        if (detected_host_os() != last_os) {
-            draw_os(false);
-            last_os = detected_host_os();
-        }
+        //
+        // static os_variant_t last_os = OS_UNSURE;
+        //
+        // if (detected_host_os() != last_os) {
+        //     draw_os(false);
+        //     last_os = detected_host_os();
+        // }
 
     } else {
         static uint64_t last_rgb = 0;
