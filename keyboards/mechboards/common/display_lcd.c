@@ -110,6 +110,14 @@ void draw_caps(const bool caps_lock) {
     }
 }
 
+void draw_caps_word(const bool caps_word) {
+    if (caps_word) {
+        drawtext_centered_recolor(surface, 0, 210, 50, pixellari_18, "WORD", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+    } else {
+        drawtext_centered_recolor(surface, 0, 210, 50, pixellari_18, "WORD", 255, 0, 255, 0, 0, 0);
+    }
+}
+
 void clear_display(void) {
     qp_rect(surface, 0, 0, LCD_WIDTH - 1, LCD_HEIGHT - 1, 0, 0, 0, true);
 }
@@ -166,6 +174,7 @@ void wpm_layer_display_init(void) {
     draw_wpm_text();
     draw_wpm_chart_2(true);
     draw_caps(host_keyboard_led_state().caps_lock);
+    draw_caps_word(false);
 }
 
 void draw_bar(uint8_t value, uint8_t max_value, uint8_t left, uint8_t top, uint8_t max_length, uint8_t height) {
@@ -324,9 +333,9 @@ bool led_update_kb(led_t led_state) {
 }
 
 void display_task_kb(void) {
-    if (!display_task_user()) {
-        return;
-    }
+    // if (!display_task_user()) {
+    //     return;
+    // }
 
     if (last_hsv.h != rgb_matrix_get_hue() || last_hsv.s != rgb_matrix_get_sat()) {
         last_hsv.h = rgb_matrix_get_hue();
@@ -378,6 +387,14 @@ void display_task_kb(void) {
             draw_layers();
         }
 
+        static bool currcapsword = false;
+        static bool lastcapsword = false;
+
+        currcapsword = display_task_user();
+        if (currcapsword != lastcapsword) {
+            lastcapsword = currcapsword;
+            draw_caps_word(currcapsword);
+        }
     } else {
         static uint64_t last_rgb = 0;
         if (rgb_matrix_config.raw != last_rgb) {

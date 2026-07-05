@@ -10,6 +10,8 @@
 
 // clang-format off
 
+static bool caps_word = false;
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT(
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                             KC_6,    KC_7,    KC_8,    KC_9,   KC_0,    KC_EQL,
@@ -58,3 +60,11 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif
 // clang-format on
+
+void caps_word_set_user(bool active) {
+    caps_word = active;
+}
+
+bool display_task_user(void) {
+    return caps_word;
+}
