@@ -123,7 +123,40 @@ void clear_display(void) {
 }
 
 void draw_layers(void) {
-    drawtext_centered(surface, 0, 10, 135, pixellari_24, "LAYER");
+    char *label;
+
+    switch (get_highest_layer(layer_state)) {
+        case 0:
+            label = "MAIN";
+            break;
+
+        case 1:
+            label = "NAV";
+            break;
+
+        case 2:
+            label = "SYMBOLS";
+            break;
+
+        case 3:
+            label = "MEDIA";
+            break;
+
+        case 4:
+            label = "NUMPAD";
+            break;
+
+        case 5:
+            label = "DESIGN";
+            break;
+
+        default:
+            label = "LAYER";
+            break;
+    }
+
+    qp_rect(surface, 0, 0, LCD_WIDTH - 1, pixellari_24->line_height + 10, 0, 0, 0, true);
+    drawtext_centered(surface, 0, 10, 135, pixellari_24, label);
     drawtext_layer(0, 45, 32, "1", 0);
     drawtext_layer(34, 45, 32, "2", 1);
     drawtext_layer(66, 45, 32, "3", 2);
