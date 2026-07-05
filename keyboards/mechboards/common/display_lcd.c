@@ -102,6 +102,14 @@ void drawtext_layer(uint16_t x, uint16_t y, uint8_t width, const char *str, uint
     }
 }
 
+void draw_caps(const bool caps_lock) {
+    if (caps_lock) {
+        drawtext_centered_recolor(surface, 0, 190, 50, pixellari_18, "CAPS", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+    } else {
+        drawtext_centered_recolor(surface, 0, 190, 50, pixellari_18, "CAPS", 255, 0, 255, 0, 0, 0);
+    }
+}
+
 void clear_display(void) {
     qp_rect(surface, 0, 0, LCD_WIDTH - 1, LCD_HEIGHT - 1, 0, 0, 0, true);
 }
@@ -115,32 +123,6 @@ void draw_layers(void) {
     drawtext_layer(34, 80, 32, "5", 4);
     drawtext_layer(66, 80, 32, "6", 5);
 }
-
-// void draw_os(bool init) {
-//     if (init) {
-//         drawtext_centered(surface, 0, 190, 135, pixellari_24, "OS");
-//     }
-//     char *os_name;
-//     switch (detected_host_os()) {
-//         case OS_MACOS:
-//             os_name = "MacOS";
-//             break;
-//         case OS_IOS:
-//             os_name = "Apple";
-//             break;
-//         case OS_WINDOWS:
-//             os_name = "Windows";
-//             break;
-//         case OS_LINUX:
-//             os_name = "Linux";
-//             break;
-//         default:
-//             os_name = "Unsure";
-//             break;
-//     }
-//     qp_rect(surface, 0, 220, LCD_WIDTH-1, 220+pixellari_18->line_height, 0, 0, 0, true);
-//     drawtext_centered_recolor(surface, 0, 220, 135, pixellari_18, os_name, ui_hsv.h, ui_hsv.s, ui_hsv.v, 0, 0, 0);
-// }
 
 void draw_wpm_text(void) {
     char buffer[64] = {0};
@@ -171,17 +153,6 @@ void wpm_chart_init(void) {
     wpm_chart.start = 0;
 }
 
-// void draw_wpm_chart(bool init) {
-//     if (init) {
-//         wpm_chart_init();
-//     }
-//     qp_rect(surface, 0, LCD_HEIGHT - WPM_CHART_HEIGHT - 10, LCD_WIDTH - 1, LCD_HEIGHT - 1 - 10, 0, 0, 0, true);
-//     for (uint8_t i = 0; i < WPM_CHART_WIDTH; i++) {
-//         uint8_t location     = (wpm_chart.start + i) % WPM_CHART_WIDTH;
-//         uint8_t scaled_value = scale8(WPM_CHART_HEIGHT, wpm_chart.values[location]);
-//         qp_line(surface, i, LCD_HEIGHT - 1 - 10, i, (LCD_HEIGHT - 1 - 10) - scaled_value, ui_hsv.h, ui_hsv.s, ui_hsv.v);
-//     }
-// }
 
 void draw_wpm_chart_2(bool init) {
     if (init) {
@@ -194,6 +165,7 @@ void wpm_layer_display_init(void) {
     draw_layers();
     draw_wpm_text();
     draw_wpm_chart_2(true);
+    draw_caps(host_keyboard_led_state().caps_lock);
 }
 
 void draw_bar(uint8_t value, uint8_t max_value, uint8_t left, uint8_t top, uint8_t max_length, uint8_t height) {
@@ -341,6 +313,16 @@ __attribute__((weak)) bool display_task_user(void) {
     return true;
 }
 
+bool led_update_kb(led_t led_state) {
+    bool res = led_update_user(led_state);
+
+    if (res && is_keyboard_left()) {
+        draw_caps(led_state.caps_lock);
+    }
+
+    return res;
+}
+
 void display_task_kb(void) {
     if (!display_task_user()) {
         return;
@@ -395,13 +377,6 @@ void display_task_kb(void) {
             lastlay = currlay;
             draw_layers();
         }
-        //
-        // static os_variant_t last_os = OS_UNSURE;
-        //
-        // if (detected_host_os() != last_os) {
-        //     draw_os(false);
-        //     last_os = detected_host_os();
-        // }
 
     } else {
         static uint64_t last_rgb = 0;
