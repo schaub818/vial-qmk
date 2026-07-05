@@ -271,7 +271,7 @@ __attribute__((weak)) bool display_init_user(void) {
 }
 
 void display_ui_init(void) {
-    if (is_keyboard_left()) {
+    if (!is_keyboard_left()) {
         wpm_layer_display_init();
         // draw_os(true);
     } else {
@@ -316,7 +316,7 @@ __attribute__((weak)) bool display_task_user(void) {
 bool led_update_kb(led_t led_state) {
     bool res = led_update_user(led_state);
 
-    if (res && is_keyboard_left()) {
+    if (res && !is_keyboard_left()) {
         draw_caps(led_state.caps_lock);
     }
 
@@ -353,7 +353,7 @@ void display_task_kb(void) {
 
     static uint32_t timer = 0;
 
-    if (is_keyboard_left()) {
+    if (!is_keyboard_left()) {
         if (timer_elapsed(timer) > 100) {
             static uint32_t lastwpm = 0;
             static uint32_t currwpm = 0;
