@@ -12,7 +12,7 @@
 #include "backlight/backlight.h"
 
 #define WPM_CHART_WIDTH 135
-#define WPM_CHART_HEIGHT 55
+#define WPM_CHART_HEIGHT 30
 
 #define LCD_HEIGHT 240
 #define LCD_WIDTH 135
@@ -104,17 +104,25 @@ void drawtext_layer(uint16_t x, uint16_t y, uint8_t width, const char *str, uint
 
 void draw_caps(const bool caps_lock) {
     if (caps_lock) {
-        drawtext_centered_recolor(surface, 0, 210, 50, pixellari_18, "CAPS", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+        drawtext_centered_recolor(surface, 0, 175, 50, pixellari_18, "CAPS", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     } else {
-        drawtext_centered_recolor(surface, 0, 210, 50, pixellari_18, "CAPS", 255, 0, 255, 0, 0, 0);
+        drawtext_centered_recolor(surface, 0, 175, 50, pixellari_18, "CAPS", 255, 0, 255, 0, 0, 0);
+    }
+}
+
+void draw_num(const bool num_lock) {
+    if (num_lock) {
+        drawtext_centered_recolor(surface, 0, 210, LCD_WIDTH - 1, pixellari_18, "NUM", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+    } else {
+        drawtext_centered_recolor(surface, 0, 210, LCD_WIDTH - 1, pixellari_18, "NUM", 255, 0, 255, 0, 0, 0);
     }
 }
 
 void draw_caps_word(const bool caps_word) {
     if (caps_word) {
-        drawtext_centered_recolor(surface, 70, 210, 50, pixellari_18, "WORD", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+        drawtext_centered_recolor(surface, 70, 175, 50, pixellari_18, "WORD", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     } else {
-        drawtext_centered_recolor(surface, 70, 210, 50, pixellari_18, "WORD", 255, 0, 255, 0, 0, 0);
+        drawtext_centered_recolor(surface, 70, 175, 50, pixellari_18, "WORD", 255, 0, 255, 0, 0, 0);
     }
 }
 
@@ -184,8 +192,8 @@ void wpm_chart_next(void) {
 void wpm_chart_write_value(uint8_t value) {
     wpm_chart.values[wpm_chart.start] = value;
     uint8_t scaled_value              = scale8(WPM_CHART_HEIGHT, wpm_chart.values[wpm_chart.start]);
-    qp_line(surface, wpm_chart.start, LCD_HEIGHT - 1 - 40, wpm_chart.start, (LCD_HEIGHT - 1 - 40) - WPM_CHART_HEIGHT, 0, 0, 0);
-    qp_line(surface, wpm_chart.start, LCD_HEIGHT - 1 - 40, wpm_chart.start, (LCD_HEIGHT - 1 - 40) - scaled_value, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+    qp_line(surface, wpm_chart.start, LCD_HEIGHT - 1 - 75, wpm_chart.start, (LCD_HEIGHT - 1 - 75) - WPM_CHART_HEIGHT, 0, 0, 0);
+    qp_line(surface, wpm_chart.start, LCD_HEIGHT - 1 - 75, wpm_chart.start, (LCD_HEIGHT - 1 - 75) - scaled_value, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     wpm_chart_next();
 }
 
@@ -207,6 +215,7 @@ void wpm_layer_display_init(void) {
     draw_wpm_text();
     draw_wpm_chart_2(true);
     draw_caps(host_keyboard_led_state().caps_lock);
+    draw_num(host_keyboard_led_state().num_lock);LCD_WIDTH - 1
     draw_caps_word(false);
 }
 
@@ -360,6 +369,7 @@ bool led_update_kb(led_t led_state) {
 
     if (res && !is_keyboard_left()) {
         draw_caps(led_state.caps_lock);
+        draw_num(led_state.num_lock);
     }
 
     return res;
