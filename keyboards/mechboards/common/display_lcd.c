@@ -155,7 +155,7 @@ void draw_layers(void) {
             break;
 
         case 5:
-            label = "DESIGN";
+            label = "GAMING";
             break;
 
         default:
