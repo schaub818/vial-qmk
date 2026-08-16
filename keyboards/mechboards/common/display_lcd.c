@@ -96,7 +96,7 @@ void drawtext_centered(painter_device_t device, uint16_t x, uint16_t y, uint8_t 
 
 void drawtext_layer(uint16_t x, uint16_t y, uint8_t width, const char *str, uint8_t layer) {
     if (layer == get_highest_layer(layer_state)) {
-        drawtext_centered_recolor(surface, x, y, width, pixellari_24, str, 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+        drawtext_centered_recolor(surface, x, y, width, pixellari_24, str, 255, 0, 0, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     } else {
         drawtext_centered_recolor(surface, x, y, width, pixellari_24, str, 255, 0, 255, 0, 0, 0);
     }
@@ -104,7 +104,7 @@ void drawtext_layer(uint16_t x, uint16_t y, uint8_t width, const char *str, uint
 
 void draw_caps(const bool caps_lock) {
     if (caps_lock) {
-        drawtext_centered_recolor(surface, 0, 175, 50, pixellari_18, "CAPS", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+        drawtext_centered_recolor(surface, 0, 175, 50, pixellari_18, "CAPS", 255, 0, 0, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     } else {
         drawtext_centered_recolor(surface, 0, 175, 50, pixellari_18, "CAPS", 255, 0, 255, 0, 0, 0);
     }
@@ -112,7 +112,7 @@ void draw_caps(const bool caps_lock) {
 
 void draw_num(const bool num_lock) {
     if (num_lock) {
-        drawtext_centered_recolor(surface, 0, 210, LCD_WIDTH - 1, pixellari_18, "NUM", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+        drawtext_centered_recolor(surface, 0, 210, LCD_WIDTH - 1, pixellari_18, "NUM", 255, 0, 0, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     } else {
         drawtext_centered_recolor(surface, 0, 210, LCD_WIDTH - 1, pixellari_18, "NUM", 255, 0, 255, 0, 0, 0);
     }
@@ -120,7 +120,7 @@ void draw_num(const bool num_lock) {
 
 void draw_caps_word(const bool caps_word) {
     if (caps_word) {
-        drawtext_centered_recolor(surface, 70, 175, 50, pixellari_18, "WORD", 255, 0, 255, ui_hsv.h, ui_hsv.s, ui_hsv.v);
+        drawtext_centered_recolor(surface, 70, 175, 50, pixellari_18, "WORD", 255, 0, 0, ui_hsv.h, ui_hsv.s, ui_hsv.v);
     } else {
         drawtext_centered_recolor(surface, 70, 175, 50, pixellari_18, "WORD", 255, 0, 255, 0, 0, 0);
     }
